@@ -1,0 +1,210 @@
+import React, { useState } from 'react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
+
+const CustomerDiagram = () => {
+  const [expandedNodes, setExpandedNodes] = useState({
+    root: true,
+    customerList: true,
+    customerGroup: true,
+    listHeaded: true,
+    listItem: true,
+    editModal: true,
+    editAddress: true
+  });
+
+  const toggleNode = (nodeId) => {
+    setExpandedNodes(prev => ({
+      ...prev,
+      [nodeId]: !prev[nodeId]
+    }));
+  };
+
+  const Node = ({ id, label, children, color = "blue", indent = 0 }) => {
+    const hasChildren = children && children.length > 0;
+    const isExpanded = expandedNodes[id];
+
+    return (
+      <div style={{ marginLeft: `${indent * 24}px` }} className="my-1">
+        <div className="flex items-center gap-2">
+          {hasChildren && (
+            <button
+              onClick={() => toggleNode(id)}
+              className="p-0 hover:bg-gray-100 rounded"
+            >
+              {isExpanded ? (
+                <ChevronDown size={16} className="text-gray-600" />
+              ) : (
+                <ChevronRight size={16} className="text-gray-600" />
+              )}
+            </button>
+          )}
+          {!hasChildren && <span className="w-4" />}
+          
+          <div className={`px-3 py-2 rounded-lg border-2 border-${color}-500 bg-${color}-50 inline-block font-mono text-sm font-semibold`}>
+            {label}
+          </div>
+        </div>
+        
+        {hasChildren && isExpanded && (
+          <div className="ml-4 border-l-2 border-gray-300 pl-2 mt-1">
+            {children}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const Method = ({ name, returns, indent = 0 }) => (
+    <div style={{ marginLeft: `${indent * 24}px` }} className="my-1 flex items-center gap-2">
+      <span className="w-4" />
+      <div className="px-2 py-1 bg-purple-100 border border-purple-300 rounded text-xs font-mono">
+        {name}
+      </div>
+      {returns && (
+        <>
+          <span className="text-gray-400">→</span>
+          <span className="text-purple-700 font-semibold text-xs">{returns}</span>
+        </>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-lg">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b-2 border-gray-300 pb-2">
+        🗺️ Customer Page Object Navigation Map
+      </h2>
+      
+      <div className="bg-white p-4 rounded-lg shadow">
+        <Node id="root" label="CustomerPageObjects" color="indigo" indent={0}>
+          <Method name="goToCustomerList()" returns="CustomerListPageObject" />
+          <Node id="customerList" label="CustomerListPageObject" color="blue" indent={1}>
+            <Method name="takeHeaded()" returns="CustomerHeadedList" />
+            <Node id="listHeaded" label="CustomerHeadedList<T>" color="cyan" indent={2}>
+              <Method name="searchCustomer(value)" returns="this" />
+              <Method name="clickAddCustomerButton()" returns="CustomerEditModal" />
+              <Node id="headedEditModal" label="CustomerEditModal<CustomerHeadedList>" color="green" indent={3}>
+                <Method name="gotoGeneralEdit()" returns="CustomerGeneralEdit" />
+                <Node id="generalEdit1" label="CustomerGeneralEdit<CustomerEditModal>" color="emerald" indent={4}>
+                  <Method name="fillCustomerName(value)" returns="this" />
+                  <Method name="fillSurname(value)" returns="this" />
+                  <Method name="fillPhoneNumber(value)" returns="this" />
+                  <Method name="clickSaveButton()" returns="this" />
+                  <Method name="back()" returns="CustomerEditModal" />
+                </Node>
+                <Method name="gotoCustomerEditAddress()" returns="CustomerEditAddress" />
+                <Node id="editAddress1" label="CustomerEditAddress<CustomerEditModal>" color="teal" indent={4}>
+                  <Method name="takeRow(row)" returns="this" />
+                  <Method name="fillAddressName(name)" returns="this" />
+                  <Method name="fillAddressDetail(detail)" returns="this" />
+                  <Method name="editAddressName(newName)" returns="this" />
+                  <Method name="removeAddress()" returns="this" />
+                  <Method name="clickSaveButton()" returns="this" />
+                  <Method name="back()" returns="CustomerEditModal" />
+                </Node>
+                <Method name="back()" returns="CustomerHeadedList" />
+              </Node>
+              <Method name="back()" returns="CustomerListPageObject" />
+            </Node>
+
+            <Method name="takeItem()" returns="CustomerListItemPageObject" />
+            <Node id="listItem" label="CustomerListItemPageObject<T>" color="cyan" indent={2}>
+              <Method name="takeRow(row)" returns="this" />
+              <Method name="hasCustomerName(value)" returns="this" />
+              <Method name="hasSurname(value)" returns="this" />
+              <Method name="hasPhoneNumber(value)" returns="this" />
+              <Method name="clickRemoveCustomer()" returns="this" />
+              <Method name="takeEditCustomer()" returns="CustomerEditModal" />
+              <Node id="editModal" label="CustomerEditModal<CustomerListItemPageObject>" color="green" indent={3}>
+                <Method name="gotoGeneralEdit()" returns="CustomerGeneralEdit" />
+                <Node id="generalEdit2" label="CustomerGeneralEdit<CustomerEditModal>" color="emerald" indent={4}>
+                  <Method name="fillCustomerName(value)" returns="this" />
+                  <Method name="fillSurname(value)" returns="this" />
+                  <Method name="fillEmail(value)" returns="this" />
+                  <Method name="fillPhoneNumber(value)" returns="this" />
+                  <Method name="selectCustomerType(type)" returns="this" />
+                  <Method name="clickSaveButton()" returns="this" />
+                  <Method name="back()" returns="CustomerEditModal" />
+                </Node>
+                <Method name="gotoCustomerEditAddress()" returns="CustomerEditAddress" />
+                <Node id="editAddress2" label="CustomerEditAddress<CustomerEditModal>" color="teal" indent={4}>
+                  <Method name="takeRow(row)" returns="this" />
+                  <Method name="fillAddressName(name)" returns="this" />
+                  <Method name="clickAddAddressButton()" returns="this" />
+                  <Method name="editAddressDetail(newDetail)" returns="this" />
+                  <Method name="hasAddressName(value)" returns="this" />
+                  <Method name="back()" returns="CustomerEditModal" />
+                </Node>
+                <Method name="gotoCustomerListItemDetailed()" returns="CustomerListItemDetailed" />
+                <Node id="detailedView" label="CustomerListItemDetailed<CustomerEditModal>" color="amber" indent={4}>
+                  <Method name="hasLastname(lastname)" returns="this" />
+                  <Method name="hasName(name)" returns="this" />
+                  <Method name="hasPhoneNumbers(value)" returns="this" />
+                  <Method name="hasFaxNumber(value)" returns="this" />
+                  <Method name="hasEmail(value)" returns="this" />
+                  <Method name="hasCustomerType(type)" returns="this" />
+                  <Method name="back()" returns="CustomerEditModal" />
+                </Node>
+                <Method name="back()" returns="CustomerListItemPageObject" />
+              </Node>
+              <Method name="back()" returns="CustomerListPageObject" />
+            </Node>
+            <Method name="back()" returns="CustomerPageObjects" />
+          </Node>
+
+          <Method name="goToCustomerGroups()" returns="CustomerGroupPageObject" />
+          <Node id="customerGroup" label="CustomerGroupPageObject" color="blue" indent={1}>
+            <Method name="takeRow(row)" returns="CustomerGroupItemPageObject" />
+            <Node id="groupItem" label="CustomerGroupItemPageObject<CustomerGroupPageObject>" color="orange" indent={2}>
+              <Method name="clickEditGroup()" returns="this" />
+              <Method name="hasGroupName(value)" returns="this" />
+              <Method name="deleteCardByTitle()" returns="this" />
+              <Method name="fillNameInput(value)" returns="this" />
+              <Method name="saveChanges()" returns="this" />
+              <Method name="back()" returns="CustomerGroupPageObject" />
+            </Node>
+            <Method name="clickAddGroupButton()" returns="this" />
+            <Method name="fillGroupName(value)" returns="this" />
+            <Method name="clickSaveButton()" returns="this" />
+            <Method name="clickConfirmButton()" returns="this" />
+            <Method name="back()" returns="CustomerPageObjects" />
+          </Node>
+        </Node>
+      </div>
+
+      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <h3 className="font-bold text-blue-900 mb-2">📚 Legend:</h3>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-indigo-500 rounded"></div>
+            <span>Root Page Object</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-blue-500 rounded"></div>
+            <span>Main Sections</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-green-500 rounded"></div>
+            <span>Edit Modals</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-purple-500 rounded"></div>
+            <span>Methods</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <h3 className="font-bold text-yellow-900 mb-2">⚠️ Navigation Pattern:</h3>
+        <ul className="text-sm space-y-1 text-gray-700">
+          <li>• Her page object <code className="bg-gray-200 px-1 rounded">back()</code> metoduyla parent'ına dönebilir</li>
+          <li>• Generic type <code className="bg-gray-200 px-1 rounded">&lt;T&gt;</code> ile type-safe navigation sağlanıyor</li>
+          <li>• Proxymise ile async işlemler kolaylaştırılmış</li>
+          <li>• Fluent API pattern ile method chaining mümkün</li>
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default CustomerDiagram;
