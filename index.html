@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Page Object Navigation Map</title>
+    <title>Customer Page Object Navigation Map - Updated</title>
     <style>
         * {
             margin: 0;
@@ -13,38 +13,38 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(to bottom right, rgb(249, 250, 251), rgb(229, 231, 235));
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 24px;
             min-height: 100vh;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
         h2 {
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: bold;
             margin-bottom: 24px;
             color: rgb(31, 41, 55);
-            border-bottom: 2px solid rgb(209, 213, 219);
-            padding-bottom: 8px;
+            border-bottom: 3px solid rgb(99, 102, 241);
+            padding-bottom: 12px;
         }
 
         .diagram-container {
-            background: white;
-            padding: 16px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            background: #f9fafb;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .node-wrapper {
-            margin: 4px 0;
+            margin: 6px 0;
         }
 
         .node-header {
@@ -54,8 +54,8 @@
         }
 
         .toggle-btn {
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             background: none;
             border: none;
             cursor: pointer;
@@ -64,81 +64,89 @@
             align-items: center;
             justify-content: center;
             color: rgb(75, 85, 99);
-            transition: background-color 0.2s;
-            border-radius: 2px;
+            transition: all 0.2s;
+            border-radius: 4px;
         }
 
         .toggle-btn:hover {
-            background-color: rgb(243, 244, 246);
+            background-color: rgb(229, 231, 235);
+            transform: scale(1.1);
         }
 
         .spacer {
-            width: 16px;
+            width: 20px;
         }
 
         .node-label {
             display: inline-block;
-            padding: 8px 12px;
+            padding: 10px 16px;
             border-radius: 8px;
             border: 2px solid;
             font-family: 'Courier New', monospace;
             font-size: 0.875rem;
             font-weight: 600;
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .node-label:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .node-label.indigo {
-            background-color: rgb(238, 242, 255);
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
             border-color: rgb(99, 102, 241);
             color: rgb(67, 56, 202);
         }
 
         .node-label.blue {
-            background-color: rgb(219, 234, 254);
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
             border-color: rgb(59, 130, 246);
             color: rgb(30, 64, 175);
         }
 
         .node-label.cyan {
-            background-color: rgb(207, 250, 254);
+            background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%);
             border-color: rgb(6, 182, 212);
             color: rgb(22, 78, 99);
         }
 
         .node-label.green {
-            background-color: rgb(209, 250, 229);
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
             border-color: rgb(16, 185, 129);
             color: rgb(6, 78, 59);
         }
 
         .node-label.emerald {
-            background-color: rgb(209, 250, 229);
+            background: linear-gradient(135deg, #d1fae5 0%, #6ee7b7 100%);
             border-color: rgb(16, 185, 129);
             color: rgb(6, 95, 70);
         }
 
         .node-label.teal {
-            background-color: rgb(204, 251, 241);
+            background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%);
             border-color: rgb(20, 184, 166);
             color: rgb(19, 78, 74);
         }
 
         .node-label.amber {
-            background-color: rgb(254, 243, 199);
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
             border-color: rgb(245, 158, 11);
             color: rgb(146, 64, 14);
         }
 
         .node-label.orange {
-            background-color: rgb(254, 215, 170);
+            background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
             border-color: rgb(249, 115, 22);
             color: rgb(154, 52, 18);
         }
 
         .node-children {
-            margin-left: 16px;
-            border-left: 2px solid rgb(209, 213, 219);
-            padding-left: 8px;
-            margin-top: 4px;
+            margin-left: 20px;
+            border-left: 3px solid rgb(209, 213, 219);
+            padding-left: 12px;
+            margin-top: 6px;
         }
 
         .node-children.hidden {
@@ -146,24 +154,31 @@
         }
 
         .method-wrapper {
-            margin: 4px 0;
+            margin: 5px 0;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
         .method-box {
-            padding: 6px 12px;
-            background-color: rgb(243, 232, 255);
+            padding: 8px 14px;
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
             border: 1px solid rgb(192, 132, 252);
-            border-radius: 4px;
+            border-radius: 6px;
             font-family: 'Courier New', monospace;
             font-size: 0.8125rem;
             color: rgb(107, 33, 168);
+            transition: all 0.2s;
+        }
+
+        .method-box:hover {
+            background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%);
+            transform: translateX(3px);
         }
 
         .arrow {
             color: rgb(156, 163, 175);
+            font-weight: bold;
         }
 
         .return-type {
@@ -173,76 +188,91 @@
         }
 
         .legend {
-            margin-top: 24px;
-            padding: 16px;
-            background-color: rgb(239, 246, 255);
-            border: 1px solid rgb(191, 219, 254);
+            margin-top: 32px;
+            padding: 24px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 2px solid rgb(147, 197, 253);
             border-radius: 12px;
         }
 
         .legend h3 {
             font-weight: bold;
             color: rgb(30, 58, 138);
-            margin-bottom: 8px;
-            font-size: 1rem;
+            margin-bottom: 16px;
+            font-size: 1.125rem;
         }
 
         .legend-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
             font-size: 0.875rem;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
         }
 
         .legend-color {
-            width: 16px;
-            height: 16px;
+            width: 24px;
+            height: 24px;
             border-radius: 4px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
         }
 
         .info-box {
-            margin-top: 16px;
-            padding: 16px;
-            background-color: rgb(254, 252, 232);
-            border: 1px solid rgb(254, 240, 138);
+            margin-top: 24px;
+            padding: 24px;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2px solid rgb(252, 211, 77);
             border-radius: 12px;
         }
 
         .info-box h3 {
             font-weight: bold;
             color: rgb(146, 64, 14);
-            margin-bottom: 8px;
-            font-size: 1rem;
+            margin-bottom: 12px;
+            font-size: 1.125rem;
         }
 
         .info-box ul {
             list-style: none;
             padding: 0;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
         }
 
         .info-box li {
-            padding: 4px 0;
+            padding: 6px 0;
             color: rgb(55, 65, 81);
+            line-height: 1.6;
         }
 
         .info-box code {
             background-color: rgb(229, 231, 235);
-            padding: 2px 4px;
+            padding: 3px 6px;
             border-radius: 4px;
             font-family: 'Courier New', monospace;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
         }
 
         .chevron-down, .chevron-right {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .legend-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -253,44 +283,52 @@
         <div class="diagram-container" id="diagram"></div>
 
         <div class="legend">
-            <h3>📚 Legend:</h3>
+            <h3>📚 Renk Kodları</h3>
             <div class="legend-grid">
                 <div class="legend-item">
-                    <div class="legend-color" style="background-color: rgb(99, 102, 241);"></div>
-                    <span>Root Page Object</span>
+                    <div class="legend-color" style="background: linear-gradient(135deg, #eef2ff, #e0e7ff);"></div>
+                    <span><strong>Root Page Object</strong></span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background-color: rgb(59, 130, 246);"></div>
-                    <span>Main Sections</span>
+                    <div class="legend-color" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe);"></div>
+                    <span><strong>Main Sections</strong></span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background-color: rgb(16, 185, 129);"></div>
-                    <span>Edit Modals</span>
+                    <div class="legend-color" style="background: linear-gradient(135deg, #d1fae5, #a7f3d0);"></div>
+                    <span><strong>Edit Modals</strong></span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background-color: rgb(168, 85, 247);"></div>
-                    <span>Methods</span>
+                    <div class="legend-color" style="background: linear-gradient(135deg, #f3e8ff, #e9d5ff);"></div>
+                    <span><strong>Methods</strong></span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #fef3c7, #fde68a);"></div>
+                    <span><strong>Detail Views</strong></span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #fed7aa, #fdba74);"></div>
+                    <span><strong>Group Management</strong></span>
                 </div>
             </div>
         </div>
 
         <div class="info-box">
-            <h3>⚠️ Navigation Pattern:</h3>
+            <h3>⚡ Navigation Özellikleri</h3>
             <ul>
-                <li>• Her page object <code>back()</code> metoduyla parent'ına dönebilir</li>
-                <li>• Generic type <code>&lt;T&gt;</code> ile type-safe navigation sağlanıyor</li>
-                <li>• Proxymise ile async işlemler kolaylaştırılmış</li>
-                <li>• Fluent API pattern ile method chaining mümkün</li>
+                <li>✓ Her page object <code>back()</code> metoduyla parent'ına dönebilir</li>
+                <li>✓ Generic type <code>&lt;T&gt;</code> ile type-safe navigation sağlanıyor</li>
+                <li>✓ <code>proxymise</code> ile async işlemler kolaylaştırılmış</li>
+                <li>✓ Fluent API pattern ile method chaining mümkün (<code>return this</code>)</li>
+                <li>✓ Tüm metodlar <code>Promise</code> döndürür</li>
+                <li>✓ Modal'lar <code>waitFor</code> ile senkronize ediliyor</li>
             </ul>
         </div>
     </div>
 
     <script>
-        // SVG Icons
-        const chevronDownSVG = `<svg class="chevron-down" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>`;
-        const chevronRightSVG = `<svg class="chevron-right" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>`;
+        const chevronDownSVG = `<svg class="chevron-down" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>`;
+        const chevronRightSVG = `<svg class="chevron-right" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>`;
 
-        // State management
         const expandedNodes = {
             root: true,
             customerList: true,
@@ -298,8 +336,7 @@
             listHeaded: true,
             listItem: true,
             editModal: true,
-            editAddress: true,
-            headedEditModal: true,
+            editModalHeaded: true,
             generalEdit1: true,
             generalEdit2: true,
             editAddress1: true,
@@ -353,100 +390,135 @@
             diagram.innerHTML = createNode('root', 'CustomerPageObjects', 'indigo', 0, `
                 ${createMethod('goToCustomerList()', 'CustomerListPageObject')}
                 ${createNode('customerList', 'CustomerListPageObject', 'blue', 1, `
-                    ${createMethod('takeHeaded()', 'CustomerHeadedList')}
+                    
+                    ${createMethod('takeHeaded()', 'CustomerHeadedList&lt;this&gt;')}
                     ${createNode('listHeaded', 'CustomerHeadedList&lt;T&gt;', 'cyan', 2, `
-                        ${createMethod('searchCustomer(value)', 'this')}
-                        ${createMethod('clickAddCustomerButton()', 'CustomerEditModal')}
-                        ${createNode('headedEditModal', 'CustomerEditModal&lt;CustomerHeadedList&gt;', 'green', 3, `
-                            ${createMethod('gotoGeneralEdit()', 'CustomerGeneralEdit')}
-                            ${createNode('generalEdit1', 'CustomerGeneralEdit&lt;CustomerEditModal&gt;', 'emerald', 4, `
-                                ${createMethod('fillCustomerName(value)', 'this')}
-                                ${createMethod('fillSurname(value)', 'this')}
-                                ${createMethod('fillPhoneNumber(value)', 'this')}
-                                ${createMethod('clickSaveButton()', 'this')}
-                                ${createMethod('back()', 'CustomerEditModal')}
-                            `)}
-                            ${createMethod('gotoCustomerEditAddress()', 'CustomerEditAddress')}
+                        ${createMethod('searchCustomer(value: string, pressEnter = true)', 'this')}
+                        ${createMethod('clickAddCustomerButton()', 'CustomerEditModal&lt;this&gt;')}
+                        
+                        ${createNode('editModalHeaded', 'CustomerEditModal&lt;CustomerHeadedList&gt;', 'green', 3, `
+                            ${createMethod('gotoCustomerEditAddress()', 'CustomerEditAddress&lt;this&gt;')}
                             ${createNode('editAddress1', 'CustomerEditAddress&lt;CustomerEditModal&gt;', 'teal', 4, `
-                                ${createMethod('takeRow(row)', 'this')}
-                                ${createMethod('fillAddressName(name)', 'this')}
-                                ${createMethod('fillAddressDetail(detail)', 'this')}
-                                ${createMethod('editAddressName(newName)', 'this')}
+                                ${createMethod('takeRow(row: number)', 'this')}
+                                ${createMethod('fillAddressName(name: string)', 'this')}
+                                ${createMethod('fillAddressDetail(detail: string)', 'this')}
+                                ${createMethod('clickAddAddressButton()', 'this')}
+                                ${createMethod('editAddressName(newName: string)', 'this')}
+                                ${createMethod('editAddressDetail(newDetail: string)', 'this')}
                                 ${createMethod('removeAddress()', 'this')}
                                 ${createMethod('clickSaveButton()', 'this')}
+                                ${createMethod('hasAddressName(value: string)', 'this')}
+                                ${createMethod('hasAddressDetail(value: string)', 'this')}
                                 ${createMethod('back()', 'CustomerEditModal')}
                             `)}
+                            
+                            ${createMethod('gotoGeneralEdit()', 'CustomerGeneralEdit&lt;this&gt;')}
+                            ${createNode('generalEdit1', 'CustomerGeneralEdit&lt;CustomerEditModal&gt;', 'emerald', 4, `
+                                ${createMethod('fillCustomerName(value: string)', 'this')}
+                                ${createMethod('fillSurname(value: string)', 'this')}
+                                ${createMethod('fillPhoneNumber(value: string)', 'this')}
+                                ${createMethod('fillEmail(value: string)', 'this')}
+                                ${createMethod('fillFaxNumber(value: string)', 'this')}
+                                ${createMethod('fillWebAddress(value: string)', 'this')}
+                                ${createMethod('selectCustomerType(value: INDIVIDUAL | CORPORATION)', 'this')}
+                                ${createMethod('selectTeam(value: string)', 'this')}
+                                ${createMethod('fillKeyword(value: string)', 'this')}
+                                ${createMethod('clickSaveButton()', 'this')}
+                                ${createMethod('back()', 'CustomerEditModal')}
+                            `)}
+                            
+                            ${createMethod('gotoCustomerListItemDetailed()', 'CustomerListItemDetailed&lt;this&gt;')}
                             ${createMethod('back()', 'CustomerHeadedList')}
                         `)}
                         ${createMethod('back()', 'CustomerListPageObject')}
                     `)}
                     
-                    ${createMethod('takeItem()', 'CustomerListItemPageObject')}
+                    ${createMethod('takeItem()', 'CustomerListItemPageObject&lt;this&gt;')}
                     ${createNode('listItem', 'CustomerListItemPageObject&lt;T&gt;', 'cyan', 2, `
-                        ${createMethod('takeRow(row)', 'this')}
-                        ${createMethod('hasCustomerName(value)', 'this')}
-                        ${createMethod('hasSurname(value)', 'this')}
-                        ${createMethod('hasPhoneNumber(value)', 'this')}
+                        ${createMethod('takeRow(row: number)', 'this')}
+                        ${createMethod('hasCustomerName(value: string)', 'this')}
+                        ${createMethod('hasSurname(value: string)', 'this')}
+                        ${createMethod('hasPhoneNumber(value: string)', 'this')}
                         ${createMethod('clickRemoveCustomer()', 'this')}
-                        ${createMethod('takeEditCustomer()', 'CustomerEditModal')}
+                        ${createMethod('takeEditCustomer()', 'CustomerEditModal&lt;this&gt;')}
+                        
                         ${createNode('editModal', 'CustomerEditModal&lt;CustomerListItemPageObject&gt;', 'green', 3, `
-                            ${createMethod('gotoGeneralEdit()', 'CustomerGeneralEdit')}
+                            ${createMethod('gotoCustomerEditAddress()', 'CustomerEditAddress&lt;this&gt;')}
+                            ${createNode('editAddress2', 'CustomerEditAddress&lt;CustomerEditModal&gt;', 'teal', 4, `
+                                ${createMethod('takeRow(row: number)', 'this')}
+                                ${createMethod('fillAddressName(name: string)', 'this')}
+                                ${createMethod('fillAddressDetail(detail: string)', 'this')}
+                                ${createMethod('clickAddAddressButton()', 'this')}
+                                ${createMethod('editAddressName(newName: string)', 'this')}
+                                ${createMethod('editAddressDetail(newDetail: string)', 'this')}
+                                ${createMethod('removeAddress()', 'this')}
+                                ${createMethod('clickSaveButton()', 'this')}
+                                ${createMethod('hasAddressName(value: string)', 'this')}
+                                ${createMethod('hasAddressDetail(value: string)', 'this')}
+                                ${createMethod('back()', 'CustomerEditModal')}
+                            `)}
+                            
+                            ${createMethod('gotoGeneralEdit()', 'CustomerGeneralEdit&lt;this&gt;')}
                             ${createNode('generalEdit2', 'CustomerGeneralEdit&lt;CustomerEditModal&gt;', 'emerald', 4, `
-                                ${createMethod('fillCustomerName(value)', 'this')}
-                                ${createMethod('fillSurname(value)', 'this')}
-                                ${createMethod('fillEmail(value)', 'this')}
-                                ${createMethod('fillPhoneNumber(value)', 'this')}
-                                ${createMethod('selectCustomerType(type)', 'this')}
+                                ${createMethod('fillCustomerName(value: string)', 'this')}
+                                ${createMethod('fillSurname(value: string)', 'this')}
+                                ${createMethod('fillPhoneNumber(value: string)', 'this')}
+                                ${createMethod('fillEmail(value: string)', 'this')}
+                                ${createMethod('fillFaxNumber(value: string)', 'this')}
+                                ${createMethod('fillWebAddress(value: string)', 'this')}
+                                ${createMethod('selectCustomerType(value: INDIVIDUAL | CORPORATION)', 'this')}
+                                ${createMethod('selectTeam(value: string)', 'this')}
+                                ${createMethod('fillKeyword(value: string)', 'this')}
                                 ${createMethod('clickSaveButton()', 'this')}
                                 ${createMethod('back()', 'CustomerEditModal')}
                             `)}
-                            ${createMethod('gotoCustomerEditAddress()', 'CustomerEditAddress')}
-                            ${createNode('editAddress2', 'CustomerEditAddress&lt;CustomerEditModal&gt;', 'teal', 4, `
-                                ${createMethod('takeRow(row)', 'this')}
-                                ${createMethod('fillAddressName(name)', 'this')}
-                                ${createMethod('clickAddAddressButton()', 'this')}
-                                ${createMethod('editAddressDetail(newDetail)', 'this')}
-                                ${createMethod('hasAddressName(value)', 'this')}
-                                ${createMethod('back()', 'CustomerEditModal')}
-                            `)}
-                            ${createMethod('gotoCustomerListItemDetailed()', 'CustomerListItemDetailed')}
+                            
+                            ${createMethod('gotoCustomerListItemDetailed()', 'CustomerListItemDetailed&lt;this&gt;')}
                             ${createNode('detailedView', 'CustomerListItemDetailed&lt;CustomerEditModal&gt;', 'amber', 4, `
-                                ${createMethod('hasLastname(lastname)', 'this')}
-                                ${createMethod('hasName(name)', 'this')}
-                                ${createMethod('hasPhoneNumbers(value)', 'this')}
-                                ${createMethod('hasFaxNumber(value)', 'this')}
-                                ${createMethod('hasEmail(value)', 'this')}
-                                ${createMethod('hasCustomerType(type)', 'this')}
+                                ${createMethod('hasLastname(lastname: string)', 'this')}
+                                ${createMethod('hasName(name: string)', 'this')}
+                                ${createMethod('hasPhoneNumbers(value: string)', 'this')}
+                                ${createMethod('hasFaxNumber(value: string)', 'this')}
+                                ${createMethod('hasCustomerType(value: INDIVIDUAL | CORPORATION)', 'this')}
+                                ${createMethod('hasKeyword(value: string)', 'this')}
+                                ${createMethod('hasEmail(value: string)', 'this')}
+                                ${createMethod('hasWebAddress(value: string)', 'this')}
+                                ${createMethod('hasTeam(value: string)', 'this')}
                                 ${createMethod('back()', 'CustomerEditModal')}
                             `)}
+                            
                             ${createMethod('back()', 'CustomerListItemPageObject')}
                         `)}
                         ${createMethod('back()', 'CustomerListPageObject')}
                     `)}
+                    
                     ${createMethod('back()', 'CustomerPageObjects')}
                 `)}
                 
                 ${createMethod('goToCustomerGroups()', 'CustomerGroupPageObject')}
                 ${createNode('customerGroup', 'CustomerGroupPageObject', 'blue', 1, `
-                    ${createMethod('takeRow(row)', 'CustomerGroupItemPageObject')}
+                    ${createMethod('clickAddGroupButton()', 'this')}
+                    ${createMethod('clickCancelButton()', 'this')}
+                    ${createMethod('fillGroupName(value: string)', 'this')}
+                    ${createMethod('clickSaveButton()', 'this')}
+                    ${createMethod('clickConfirmButton()', 'this')}
+                    ${createMethod('takeRow(row: number)', 'CustomerGroupItemPageObject&lt;this&gt;')}
+                    
                     ${createNode('groupItem', 'CustomerGroupItemPageObject&lt;CustomerGroupPageObject&gt;', 'orange', 2, `
                         ${createMethod('clickEditGroup()', 'this')}
-                        ${createMethod('hasGroupName(value)', 'this')}
+                        ${createMethod('hasGroupName(value: string)', 'this')}
                         ${createMethod('deleteCardByTitle()', 'this')}
-                        ${createMethod('fillNameInput(value)', 'this')}
+                        ${createMethod('fillNameInput(value: string)', 'this')}
+                        ${createMethod('clickGroupName(groupName: string)', 'this')}
                         ${createMethod('saveChanges()', 'this')}
                         ${createMethod('back()', 'CustomerGroupPageObject')}
                     `)}
-                    ${createMethod('clickAddGroupButton()', 'this')}
-                    ${createMethod('fillGroupName(value)', 'this')}
-                    ${createMethod('clickSaveButton()', 'this')}
-                    ${createMethod('clickConfirmButton()', 'this')}
+                    
                     ${createMethod('back()', 'CustomerPageObjects')}
                 `)}
             `);
         }
 
-        // Initial render
         renderDiagram();
     </script>
 </body>
