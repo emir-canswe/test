@@ -1,210 +1,453 @@
-import React, { useState } from 'react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Page Object Navigation Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-const CustomerDiagram = () => {
-  const [expandedNodes, setExpandedNodes] = useState({
-    root: true,
-    customerList: true,
-    customerGroup: true,
-    listHeaded: true,
-    listItem: true,
-    editModal: true,
-    editAddress: true
-  });
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(to bottom right, rgb(249, 250, 251), rgb(229, 231, 235));
+            padding: 24px;
+            min-height: 100vh;
+        }
 
-  const toggleNode = (nodeId) => {
-    setExpandedNodes(prev => ({
-      ...prev,
-      [nodeId]: !prev[nodeId]
-    }));
-  };
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
 
-  const Node = ({ id, label, children, color = "blue", indent = 0 }) => {
-    const hasChildren = children && children.length > 0;
-    const isExpanded = expandedNodes[id];
+        h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 24px;
+            color: rgb(31, 41, 55);
+            border-bottom: 2px solid rgb(209, 213, 219);
+            padding-bottom: 8px;
+        }
 
-    return (
-      <div style={{ marginLeft: `${indent * 24}px` }} className="my-1">
-        <div className="flex items-center gap-2">
-          {hasChildren && (
-            <button
-              onClick={() => toggleNode(id)}
-              className="p-0 hover:bg-gray-100 rounded"
-            >
-              {isExpanded ? (
-                <ChevronDown size={16} className="text-gray-600" />
-              ) : (
-                <ChevronRight size={16} className="text-gray-600" />
-              )}
-            </button>
-          )}
-          {!hasChildren && <span className="w-4" />}
-          
-          <div className={`px-3 py-2 rounded-lg border-2 border-${color}-500 bg-${color}-50 inline-block font-mono text-sm font-semibold`}>
-            {label}
-          </div>
-        </div>
+        .diagram-container {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .node-wrapper {
+            margin: 4px 0;
+        }
+
+        .node-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-btn {
+            width: 16px;
+            height: 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgb(75, 85, 99);
+            transition: background-color 0.2s;
+            border-radius: 2px;
+        }
+
+        .toggle-btn:hover {
+            background-color: rgb(243, 244, 246);
+        }
+
+        .spacer {
+            width: 16px;
+        }
+
+        .node-label {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .node-label.indigo {
+            background-color: rgb(238, 242, 255);
+            border-color: rgb(99, 102, 241);
+            color: rgb(67, 56, 202);
+        }
+
+        .node-label.blue {
+            background-color: rgb(219, 234, 254);
+            border-color: rgb(59, 130, 246);
+            color: rgb(30, 64, 175);
+        }
+
+        .node-label.cyan {
+            background-color: rgb(207, 250, 254);
+            border-color: rgb(6, 182, 212);
+            color: rgb(22, 78, 99);
+        }
+
+        .node-label.green {
+            background-color: rgb(209, 250, 229);
+            border-color: rgb(16, 185, 129);
+            color: rgb(6, 78, 59);
+        }
+
+        .node-label.emerald {
+            background-color: rgb(209, 250, 229);
+            border-color: rgb(16, 185, 129);
+            color: rgb(6, 95, 70);
+        }
+
+        .node-label.teal {
+            background-color: rgb(204, 251, 241);
+            border-color: rgb(20, 184, 166);
+            color: rgb(19, 78, 74);
+        }
+
+        .node-label.amber {
+            background-color: rgb(254, 243, 199);
+            border-color: rgb(245, 158, 11);
+            color: rgb(146, 64, 14);
+        }
+
+        .node-label.orange {
+            background-color: rgb(254, 215, 170);
+            border-color: rgb(249, 115, 22);
+            color: rgb(154, 52, 18);
+        }
+
+        .node-children {
+            margin-left: 16px;
+            border-left: 2px solid rgb(209, 213, 219);
+            padding-left: 8px;
+            margin-top: 4px;
+        }
+
+        .node-children.hidden {
+            display: none;
+        }
+
+        .method-wrapper {
+            margin: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .method-box {
+            padding: 6px 12px;
+            background-color: rgb(243, 232, 255);
+            border: 1px solid rgb(192, 132, 252);
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8125rem;
+            color: rgb(107, 33, 168);
+        }
+
+        .arrow {
+            color: rgb(156, 163, 175);
+        }
+
+        .return-type {
+            color: rgb(126, 34, 206);
+            font-weight: 600;
+            font-size: 0.8125rem;
+        }
+
+        .legend {
+            margin-top: 24px;
+            padding: 16px;
+            background-color: rgb(239, 246, 255);
+            border: 1px solid rgb(191, 219, 254);
+            border-radius: 12px;
+        }
+
+        .legend h3 {
+            font-weight: bold;
+            color: rgb(30, 58, 138);
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            font-size: 0.875rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .info-box {
+            margin-top: 16px;
+            padding: 16px;
+            background-color: rgb(254, 252, 232);
+            border: 1px solid rgb(254, 240, 138);
+            border-radius: 12px;
+        }
+
+        .info-box h3 {
+            font-weight: bold;
+            color: rgb(146, 64, 14);
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+            font-size: 0.875rem;
+        }
+
+        .info-box li {
+            padding: 4px 0;
+            color: rgb(55, 65, 81);
+        }
+
+        .info-box code {
+            background-color: rgb(229, 231, 235);
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+        }
+
+        .chevron-down, .chevron-right {
+            width: 16px;
+            height: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🗺️ Customer Page Object Navigation Map</h2>
         
-        {hasChildren && isExpanded && (
-          <div className="ml-4 border-l-2 border-gray-300 pl-2 mt-1">
-            {children}
-          </div>
-        )}
-      </div>
-    );
-  };
+        <div class="diagram-container" id="diagram"></div>
 
-  const Method = ({ name, returns, indent = 0 }) => (
-    <div style={{ marginLeft: `${indent * 24}px` }} className="my-1 flex items-center gap-2">
-      <span className="w-4" />
-      <div className="px-2 py-1 bg-purple-100 border border-purple-300 rounded text-xs font-mono">
-        {name}
-      </div>
-      {returns && (
-        <>
-          <span className="text-gray-400">→</span>
-          <span className="text-purple-700 font-semibold text-xs">{returns}</span>
-        </>
-      )}
-    </div>
-  );
-
-  return (
-    <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-lg">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b-2 border-gray-300 pb-2">
-        🗺️ Customer Page Object Navigation Map
-      </h2>
-      
-      <div className="bg-white p-4 rounded-lg shadow">
-        <Node id="root" label="CustomerPageObjects" color="indigo" indent={0}>
-          <Method name="goToCustomerList()" returns="CustomerListPageObject" />
-          <Node id="customerList" label="CustomerListPageObject" color="blue" indent={1}>
-            <Method name="takeHeaded()" returns="CustomerHeadedList" />
-            <Node id="listHeaded" label="CustomerHeadedList<T>" color="cyan" indent={2}>
-              <Method name="searchCustomer(value)" returns="this" />
-              <Method name="clickAddCustomerButton()" returns="CustomerEditModal" />
-              <Node id="headedEditModal" label="CustomerEditModal<CustomerHeadedList>" color="green" indent={3}>
-                <Method name="gotoGeneralEdit()" returns="CustomerGeneralEdit" />
-                <Node id="generalEdit1" label="CustomerGeneralEdit<CustomerEditModal>" color="emerald" indent={4}>
-                  <Method name="fillCustomerName(value)" returns="this" />
-                  <Method name="fillSurname(value)" returns="this" />
-                  <Method name="fillPhoneNumber(value)" returns="this" />
-                  <Method name="clickSaveButton()" returns="this" />
-                  <Method name="back()" returns="CustomerEditModal" />
-                </Node>
-                <Method name="gotoCustomerEditAddress()" returns="CustomerEditAddress" />
-                <Node id="editAddress1" label="CustomerEditAddress<CustomerEditModal>" color="teal" indent={4}>
-                  <Method name="takeRow(row)" returns="this" />
-                  <Method name="fillAddressName(name)" returns="this" />
-                  <Method name="fillAddressDetail(detail)" returns="this" />
-                  <Method name="editAddressName(newName)" returns="this" />
-                  <Method name="removeAddress()" returns="this" />
-                  <Method name="clickSaveButton()" returns="this" />
-                  <Method name="back()" returns="CustomerEditModal" />
-                </Node>
-                <Method name="back()" returns="CustomerHeadedList" />
-              </Node>
-              <Method name="back()" returns="CustomerListPageObject" />
-            </Node>
-
-            <Method name="takeItem()" returns="CustomerListItemPageObject" />
-            <Node id="listItem" label="CustomerListItemPageObject<T>" color="cyan" indent={2}>
-              <Method name="takeRow(row)" returns="this" />
-              <Method name="hasCustomerName(value)" returns="this" />
-              <Method name="hasSurname(value)" returns="this" />
-              <Method name="hasPhoneNumber(value)" returns="this" />
-              <Method name="clickRemoveCustomer()" returns="this" />
-              <Method name="takeEditCustomer()" returns="CustomerEditModal" />
-              <Node id="editModal" label="CustomerEditModal<CustomerListItemPageObject>" color="green" indent={3}>
-                <Method name="gotoGeneralEdit()" returns="CustomerGeneralEdit" />
-                <Node id="generalEdit2" label="CustomerGeneralEdit<CustomerEditModal>" color="emerald" indent={4}>
-                  <Method name="fillCustomerName(value)" returns="this" />
-                  <Method name="fillSurname(value)" returns="this" />
-                  <Method name="fillEmail(value)" returns="this" />
-                  <Method name="fillPhoneNumber(value)" returns="this" />
-                  <Method name="selectCustomerType(type)" returns="this" />
-                  <Method name="clickSaveButton()" returns="this" />
-                  <Method name="back()" returns="CustomerEditModal" />
-                </Node>
-                <Method name="gotoCustomerEditAddress()" returns="CustomerEditAddress" />
-                <Node id="editAddress2" label="CustomerEditAddress<CustomerEditModal>" color="teal" indent={4}>
-                  <Method name="takeRow(row)" returns="this" />
-                  <Method name="fillAddressName(name)" returns="this" />
-                  <Method name="clickAddAddressButton()" returns="this" />
-                  <Method name="editAddressDetail(newDetail)" returns="this" />
-                  <Method name="hasAddressName(value)" returns="this" />
-                  <Method name="back()" returns="CustomerEditModal" />
-                </Node>
-                <Method name="gotoCustomerListItemDetailed()" returns="CustomerListItemDetailed" />
-                <Node id="detailedView" label="CustomerListItemDetailed<CustomerEditModal>" color="amber" indent={4}>
-                  <Method name="hasLastname(lastname)" returns="this" />
-                  <Method name="hasName(name)" returns="this" />
-                  <Method name="hasPhoneNumbers(value)" returns="this" />
-                  <Method name="hasFaxNumber(value)" returns="this" />
-                  <Method name="hasEmail(value)" returns="this" />
-                  <Method name="hasCustomerType(type)" returns="this" />
-                  <Method name="back()" returns="CustomerEditModal" />
-                </Node>
-                <Method name="back()" returns="CustomerListItemPageObject" />
-              </Node>
-              <Method name="back()" returns="CustomerListPageObject" />
-            </Node>
-            <Method name="back()" returns="CustomerPageObjects" />
-          </Node>
-
-          <Method name="goToCustomerGroups()" returns="CustomerGroupPageObject" />
-          <Node id="customerGroup" label="CustomerGroupPageObject" color="blue" indent={1}>
-            <Method name="takeRow(row)" returns="CustomerGroupItemPageObject" />
-            <Node id="groupItem" label="CustomerGroupItemPageObject<CustomerGroupPageObject>" color="orange" indent={2}>
-              <Method name="clickEditGroup()" returns="this" />
-              <Method name="hasGroupName(value)" returns="this" />
-              <Method name="deleteCardByTitle()" returns="this" />
-              <Method name="fillNameInput(value)" returns="this" />
-              <Method name="saveChanges()" returns="this" />
-              <Method name="back()" returns="CustomerGroupPageObject" />
-            </Node>
-            <Method name="clickAddGroupButton()" returns="this" />
-            <Method name="fillGroupName(value)" returns="this" />
-            <Method name="clickSaveButton()" returns="this" />
-            <Method name="clickConfirmButton()" returns="this" />
-            <Method name="back()" returns="CustomerPageObjects" />
-          </Node>
-        </Node>
-      </div>
-
-      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <h3 className="font-bold text-blue-900 mb-2">📚 Legend:</h3>
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-indigo-500 rounded"></div>
-            <span>Root Page Object</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-blue-500 rounded"></div>
-            <span>Main Sections</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-green-500 rounded"></div>
-            <span>Edit Modals</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-purple-500 rounded"></div>
-            <span>Methods</span>
-          </div>
+        <div class="legend">
+            <h3>📚 Legend:</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: rgb(99, 102, 241);"></div>
+                    <span>Root Page Object</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: rgb(59, 130, 246);"></div>
+                    <span>Main Sections</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: rgb(16, 185, 129);"></div>
+                    <span>Edit Modals</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: rgb(168, 85, 247);"></div>
+                    <span>Methods</span>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <h3 className="font-bold text-yellow-900 mb-2">⚠️ Navigation Pattern:</h3>
-        <ul className="text-sm space-y-1 text-gray-700">
-          <li>• Her page object <code className="bg-gray-200 px-1 rounded">back()</code> metoduyla parent'ına dönebilir</li>
-          <li>• Generic type <code className="bg-gray-200 px-1 rounded">&lt;T&gt;</code> ile type-safe navigation sağlanıyor</li>
-          <li>• Proxymise ile async işlemler kolaylaştırılmış</li>
-          <li>• Fluent API pattern ile method chaining mümkün</li>
-        </ul>
-      </div>
+        <div class="info-box">
+            <h3>⚠️ Navigation Pattern:</h3>
+            <ul>
+                <li>• Her page object <code>back()</code> metoduyla parent'ına dönebilir</li>
+                <li>• Generic type <code>&lt;T&gt;</code> ile type-safe navigation sağlanıyor</li>
+                <li>• Proxymise ile async işlemler kolaylaştırılmış</li>
+                <li>• Fluent API pattern ile method chaining mümkün</li>
+            </ul>
+        </div>
     </div>
-  );
-};
 
-export default CustomerDiagram;
+    <script>
+        // SVG Icons
+        const chevronDownSVG = `<svg class="chevron-down" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>`;
+        const chevronRightSVG = `<svg class="chevron-right" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>`;
+
+        // State management
+        const expandedNodes = {
+            root: true,
+            customerList: true,
+            customerGroup: true,
+            listHeaded: true,
+            listItem: true,
+            editModal: true,
+            editAddress: true,
+            headedEditModal: true,
+            generalEdit1: true,
+            generalEdit2: true,
+            editAddress1: true,
+            editAddress2: true,
+            detailedView: true,
+            groupItem: true
+        };
+
+        function toggleNode(nodeId) {
+            expandedNodes[nodeId] = !expandedNodes[nodeId];
+            renderDiagram();
+        }
+
+        function createMethod(name, returns, indent = 0) {
+            return `
+                <div class="method-wrapper" style="margin-left: ${indent * 24}px;">
+                    <div class="spacer"></div>
+                    <div class="method-box">${name}</div>
+                    ${returns ? `<span class="arrow">→</span><span class="return-type">${returns}</span>` : ''}
+                </div>
+            `;
+        }
+
+        function createNode(id, label, color, indent, children = '') {
+            const hasChildren = children.trim().length > 0;
+            const isExpanded = expandedNodes[id];
+            
+            return `
+                <div class="node-wrapper" style="margin-left: ${indent * 24}px;">
+                    <div class="node-header">
+                        ${hasChildren ? 
+                            `<button class="toggle-btn" onclick="toggleNode('${id}')">
+                                ${isExpanded ? chevronDownSVG : chevronRightSVG}
+                            </button>` : 
+                            '<div class="spacer"></div>'
+                        }
+                        <div class="node-label ${color}">${label}</div>
+                    </div>
+                    ${hasChildren ? `
+                        <div class="node-children ${!isExpanded ? 'hidden' : ''}">
+                            ${children}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function renderDiagram() {
+            const diagram = document.getElementById('diagram');
+            
+            diagram.innerHTML = createNode('root', 'CustomerPageObjects', 'indigo', 0, `
+                ${createMethod('goToCustomerList()', 'CustomerListPageObject')}
+                ${createNode('customerList', 'CustomerListPageObject', 'blue', 1, `
+                    ${createMethod('takeHeaded()', 'CustomerHeadedList')}
+                    ${createNode('listHeaded', 'CustomerHeadedList&lt;T&gt;', 'cyan', 2, `
+                        ${createMethod('searchCustomer(value)', 'this')}
+                        ${createMethod('clickAddCustomerButton()', 'CustomerEditModal')}
+                        ${createNode('headedEditModal', 'CustomerEditModal&lt;CustomerHeadedList&gt;', 'green', 3, `
+                            ${createMethod('gotoGeneralEdit()', 'CustomerGeneralEdit')}
+                            ${createNode('generalEdit1', 'CustomerGeneralEdit&lt;CustomerEditModal&gt;', 'emerald', 4, `
+                                ${createMethod('fillCustomerName(value)', 'this')}
+                                ${createMethod('fillSurname(value)', 'this')}
+                                ${createMethod('fillPhoneNumber(value)', 'this')}
+                                ${createMethod('clickSaveButton()', 'this')}
+                                ${createMethod('back()', 'CustomerEditModal')}
+                            `)}
+                            ${createMethod('gotoCustomerEditAddress()', 'CustomerEditAddress')}
+                            ${createNode('editAddress1', 'CustomerEditAddress&lt;CustomerEditModal&gt;', 'teal', 4, `
+                                ${createMethod('takeRow(row)', 'this')}
+                                ${createMethod('fillAddressName(name)', 'this')}
+                                ${createMethod('fillAddressDetail(detail)', 'this')}
+                                ${createMethod('editAddressName(newName)', 'this')}
+                                ${createMethod('removeAddress()', 'this')}
+                                ${createMethod('clickSaveButton()', 'this')}
+                                ${createMethod('back()', 'CustomerEditModal')}
+                            `)}
+                            ${createMethod('back()', 'CustomerHeadedList')}
+                        `)}
+                        ${createMethod('back()', 'CustomerListPageObject')}
+                    `)}
+                    
+                    ${createMethod('takeItem()', 'CustomerListItemPageObject')}
+                    ${createNode('listItem', 'CustomerListItemPageObject&lt;T&gt;', 'cyan', 2, `
+                        ${createMethod('takeRow(row)', 'this')}
+                        ${createMethod('hasCustomerName(value)', 'this')}
+                        ${createMethod('hasSurname(value)', 'this')}
+                        ${createMethod('hasPhoneNumber(value)', 'this')}
+                        ${createMethod('clickRemoveCustomer()', 'this')}
+                        ${createMethod('takeEditCustomer()', 'CustomerEditModal')}
+                        ${createNode('editModal', 'CustomerEditModal&lt;CustomerListItemPageObject&gt;', 'green', 3, `
+                            ${createMethod('gotoGeneralEdit()', 'CustomerGeneralEdit')}
+                            ${createNode('generalEdit2', 'CustomerGeneralEdit&lt;CustomerEditModal&gt;', 'emerald', 4, `
+                                ${createMethod('fillCustomerName(value)', 'this')}
+                                ${createMethod('fillSurname(value)', 'this')}
+                                ${createMethod('fillEmail(value)', 'this')}
+                                ${createMethod('fillPhoneNumber(value)', 'this')}
+                                ${createMethod('selectCustomerType(type)', 'this')}
+                                ${createMethod('clickSaveButton()', 'this')}
+                                ${createMethod('back()', 'CustomerEditModal')}
+                            `)}
+                            ${createMethod('gotoCustomerEditAddress()', 'CustomerEditAddress')}
+                            ${createNode('editAddress2', 'CustomerEditAddress&lt;CustomerEditModal&gt;', 'teal', 4, `
+                                ${createMethod('takeRow(row)', 'this')}
+                                ${createMethod('fillAddressName(name)', 'this')}
+                                ${createMethod('clickAddAddressButton()', 'this')}
+                                ${createMethod('editAddressDetail(newDetail)', 'this')}
+                                ${createMethod('hasAddressName(value)', 'this')}
+                                ${createMethod('back()', 'CustomerEditModal')}
+                            `)}
+                            ${createMethod('gotoCustomerListItemDetailed()', 'CustomerListItemDetailed')}
+                            ${createNode('detailedView', 'CustomerListItemDetailed&lt;CustomerEditModal&gt;', 'amber', 4, `
+                                ${createMethod('hasLastname(lastname)', 'this')}
+                                ${createMethod('hasName(name)', 'this')}
+                                ${createMethod('hasPhoneNumbers(value)', 'this')}
+                                ${createMethod('hasFaxNumber(value)', 'this')}
+                                ${createMethod('hasEmail(value)', 'this')}
+                                ${createMethod('hasCustomerType(type)', 'this')}
+                                ${createMethod('back()', 'CustomerEditModal')}
+                            `)}
+                            ${createMethod('back()', 'CustomerListItemPageObject')}
+                        `)}
+                        ${createMethod('back()', 'CustomerListPageObject')}
+                    `)}
+                    ${createMethod('back()', 'CustomerPageObjects')}
+                `)}
+                
+                ${createMethod('goToCustomerGroups()', 'CustomerGroupPageObject')}
+                ${createNode('customerGroup', 'CustomerGroupPageObject', 'blue', 1, `
+                    ${createMethod('takeRow(row)', 'CustomerGroupItemPageObject')}
+                    ${createNode('groupItem', 'CustomerGroupItemPageObject&lt;CustomerGroupPageObject&gt;', 'orange', 2, `
+                        ${createMethod('clickEditGroup()', 'this')}
+                        ${createMethod('hasGroupName(value)', 'this')}
+                        ${createMethod('deleteCardByTitle()', 'this')}
+                        ${createMethod('fillNameInput(value)', 'this')}
+                        ${createMethod('saveChanges()', 'this')}
+                        ${createMethod('back()', 'CustomerGroupPageObject')}
+                    `)}
+                    ${createMethod('clickAddGroupButton()', 'this')}
+                    ${createMethod('fillGroupName(value)', 'this')}
+                    ${createMethod('clickSaveButton()', 'this')}
+                    ${createMethod('clickConfirmButton()', 'this')}
+                    ${createMethod('back()', 'CustomerPageObjects')}
+                `)}
+            `);
+        }
+
+        // Initial render
+        renderDiagram();
+    </script>
+</body>
+</html>
